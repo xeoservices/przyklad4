@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Małopolska Prestige Nieruchomości | Sprzedaż i Wynajem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f7;
+            --fg: #1a1a2e;
+            --muted: #6b7280;
+            --accent: #c9a227;
+            --accent-dark: #a68521;
+            --primary: #1a1a2e;
+            --primary-light: #2d2d44;
+            --card: #ffffff;
+            --border: #e5e5e5;
+            --success: #059669;
+            --promo-bg: #1a1a2e;
+            --promo-text: #c9a227;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-top: 40px; /* Space for top promo bar */
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Top Promo Bar */
+        .top-promo-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: var(--promo-bg);
+            color: var(--promo-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 2000;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0 1rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .top-promo-bar a {
+            color: #fff;
+            text-decoration: underline;
+            margin-left: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .top-promo-bar a:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 640px) {
+            .top-promo-bar {
+                font-size: 0.75rem;
+                height: auto;
+                padding: 0.5rem;
+                line-height: 1.4;
+            }
+            body {
+                padding-top: 60px; /* Adjust for wrapped text */
+            }
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 40px; /* Start below promo bar */
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            transition: all 0.4s ease;
+            background: transparent;
+        }
+
+        .navbar.scrolled {
+            background: rgba(26, 26, 46, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 0.75rem 2rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Adjust navbar top on mobile if promo bar wraps */
+        @media (max-width: 640px) {
+            .navbar {
+                top: 60px;
+            }
+        }
+
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80') center/cover no-repeat;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.85) 0%, rgba(26, 26, 46, 0.6) 50%, rgba(26, 26, 46, 0.75) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+            max-width: 900px;
+            margin-top: 2rem; /* Slight adjustment for visual balance with top bar */
+        }
+
+        .demo-badge {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: var(--primary);
+            padding: 0.75rem 2rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            z-index: 20;
+            animation: pulse-badge 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% { box-shadow: 0 0 20px rgba(201, 162, 39, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(201, 162, 39, 0.8); }
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            color: #fff;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeUp 1s ease forwards 0.3s;
+        }
+
+        .hero-title span {
+            color: var(--accent);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.35rem);
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease forwards 0.5s;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease forwards 0.7s;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 1rem 2.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+        }
+
+        .btn-primary:hover {
+            background: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            padding: 1rem 2.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+        }
+
+        .btn-secondary:hover {
+            background: #fff;
+            color: var(--primary);
+            border-color: #fff;
+            transform: translateY(-3px);
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            animation: fadeUp 1s ease forwards 1s;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 24px;
+            height: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .scroll-indicator span::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            width: 4px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 2px;
+            transform: translateX(-50%);
+            animation: scroll-bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes scroll-bounce {
+            0%, 100% { top: 8px; opacity: 1; }
+            50% { top: 18px; opacity: 0.5; }
+        }
+
+        /* Sections */
+        .section {
+            padding: 6rem 1.5rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--primary);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .section-subtitle {
+            color: var(--muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 1.5rem auto 0;
+        }
+
+        /* Reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* About Section */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .about-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .about-image {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            min-height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .about-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 3px solid var(--accent);
+            border-radius: 8px;
+            transform: translate(15px, 15px);
+            z-index: -1;
+        }
+
+        .about-content h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .about-content p {
+            color: var(--muted);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .about-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 480px) {
+            .about-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .about-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .about-feature svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        /* Properties Grid */
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .property-card {
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .property-image {
+            position: relative;
+            height: 240px;
+            overflow: hidden;
+        }
+
+        .property-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .property-card:hover .property-image img {
+            transform: scale(1.1);
+        }
+
+        .property-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--primary);
+            color: #fff;
+            padding: 0.4rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 2px;
+        }
+
+        .property-badge.premium {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .property-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .property-location svg {
+            width: 16px;
+            height: 16px;
+            color: var(--accent);
+        }
+
+        .property-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .property-details {
+            display: flex;
+            gap: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+
+        .property-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .property-detail svg {
+            width: 18px;
+            height: 18px;
+            color: var(--accent);
+        }
+
+        .property-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            margin-top: auto; /* Push price down */
+        }
+
+        .property-price span {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--muted);
+        }
+
+        .btn-property {
+            width: 100%;
+            background: var(--primary);
+            color: #fff;
+            padding: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            margin-top: auto;
+        }
+
+        .btn-property:hover {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        /* Pricing Table */
+        .pricing-container {
+            max-width: 900px;
+            margin: 0 auto;
+            overflow-x: auto; /* Safety for very small screens */
+        }
+
+        .pricing-table {
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            min-width: 400px; /* Ensures table doesn't break, scroll appears if needed */
+        }
+
+        .pricing-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 1.25rem 2rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s ease;
+        }
+
+        .pricing-row:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-row:hover {
+            background: rgba(201, 162, 39, 0.05);
+        }
+
+        .pricing-row.header {
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .pricing-row.header .price {
+            color: var(--accent);
+        }
+
+        .pricing-service {
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .price {
+            text-align: right;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        @media (max-width: 500px) {
+            .pricing-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                text-align: center;
+            }
+            .price {
+                text-align: center;
+            }
+            .pricing-table {
+                min-width: auto;
+            }
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            transition: all 0.4s ease;
+            border: 1px solid transparent;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent);
+        }
+
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            transition: all 0.4s ease;
+        }
+
+        .service-card:hover .service-icon {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            transform: scale(1.1);
+        }
+
+        .service-icon svg {
+            width: 32px;
+            height: 32px;
+            color: #fff;
+        }
+
+        .service-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .service-card p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+            gap: 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            height: 280px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.15);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(26, 26, 46, 0.8), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay span {
+            color: #fff;
+            font-weight: 600;
+            transform: translateY(20px);
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay span {
+            transform: translateY(0);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 3000; /* Highest level */
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            color: var(--accent);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-nav:hover {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .lightbox-prev { left: 10px; }
+        .lightbox-next { right: 10px; }
+        
+        @media (min-width: 768px) {
+             .lightbox-prev { left: -60px; }
+             .lightbox-next { right: -60px; }
+        }
+
+        /* Testimonials */
+        .testimonials-slider {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonials-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .testimonial-slide {
+            min-width: 100%;
+            padding: 0 1rem;
+        }
+
+        .testimonial-card {
+            background: var(--card);
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            font-family: 'Playfair Display', serif;
+            font-size: 6rem;
+            color: var(--accent);
+            opacity: 0.2;
+            position: absolute;
+            top: 0;
+            left: 1rem;
+            line-height: 1;
+        }
+
+        .testimonial-text {
+            font-size: 1.15rem;
+            color: var(--muted);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+        }
+
+        .testimonial-info h5 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .testimonial-info span {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .testimonials-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 2rem;
+        }
+
+        .testimonial-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-dot.active {
+            background: var(--accent);
+            transform: scale(1.2);
+        }
+
+        /* Team Grid */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .team-card {
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            transition: all 0.4s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .team-image {
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .team-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .team-card:hover .team-image img {
+            transform: scale(1.05);
+        }
+
+        .team-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .team-content h4 {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .team-role {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .team-content p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .contact-info-card, .contact-form-card {
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            height: 100%;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .contact-icon svg {
+            width: 22px;
+            height: 22px;
+            color: var(--accent);
+        }
+
+        .contact-item h5 {
+            font-size: 0.85rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.25rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .contact-item p {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .social-link svg {
+            width: 20px;
+            height: 20px;
+            color: #fff;
+        }
+
+        .social-link:hover svg {
+            color: var(--primary);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.1);
+        }
+
+        .form-group input.error,
+        .form-group textarea.error {
+            border-color: #dc2626;
+        }
+
+        .form-error {
+            color: #dc2626;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary);
+            color: #fff;
+            padding: 1.1rem;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: var(--accent);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Map */
+        .map-container {
+            height: 450px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-top: 3rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary);
+            color: #fff;
+            padding: 4rem 1.5rem 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .footer-links h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-demo-notice {
+            background: rgba(201, 162, 39, 0.2);
+            border: 1px solid var(--accent);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-demo-notice p {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-demo-notice a {
+            color: #fff;
+            font-weight: 700;
+            text-decoration: underline;
+            display: inline-block;
+            margin-top: 0.25rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 3rem;
+            padding-top: 2rem;
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1002;
+        }
+
+        .mobile-menu-btn svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(26, 26, 46, 0.98);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2rem;
+                transform: translateX(100%);
+                transition: transform 0.4s ease;
+                z-index: 1001;
+            }
+
+            .nav-links.active {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-link {
+                font-size: 1.2rem;
+            }
+
+            .demo-badge {
+                position: relative;
+                top: 0;
+                margin-bottom: 1rem;
+                display: inline-block;
+                transform: none;
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus styles */
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible,
+        textarea:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Promo Bar -->
+    <div class="top-promo-bar">
+        To jest wersja demonstracyjna. Aby zakupić taką lub podobną stronę wejdź na 
+        <a href="https://xeoservices.pl" target="_blank" rel="noopener noreferrer">xeoservices.pl</a>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" role="navigation" aria-label="Menu główne">
+        <div class="flex items-center justify-between max-w-7xl mx-auto">
+            <a href="#" class="text-white text-xl font-bold" style="font-family: 'Playfair Display', serif;">
+                MP<span style="color: var(--accent);">Nieruchomości</span>
+            </a>
+            <div class="nav-links flex items-center gap-6" id="navLinks">
+                <a href="#o-nas" class="nav-link">O nas</a>
+                <a href="#oferty" class="nav-link">Oferty</a>
+                <a href="#cennik" class="nav-link">Cennik</a>
+                <a href="#uslugi" class="nav-link">Usługi</a>
+                <a href="#galeria" class="nav-link">Galeria</a>
+                <a href="#opinie" class="nav-link">Opinie</a>
+                <a href="#kontakt" class="nav-link">Kontakt</a>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Otwórz menu">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+           
+            <h1 class="hero-title">Małopolska Prestige <span>Nieruchomości</span></h1>
+            <p class="hero-subtitle">Twój zaufany partner w świecie nieruchomości premium. Sprzedaż, wynajem i doradztwo na terenie całej Małopolski.</p>
+            <div class="hero-buttons">
+                <a href="#oferty" class="btn-primary">Zobacz oferty</a>
+                <a href="#kontakt" class="btn-secondary">Skontaktuj się</a>
+            </div>
+        </div>
+        <div class="scroll-indicator" aria-hidden="true">
+            <span></span>
+        </div>
+    </section>
+
+    <!-- O nas -->
+    <section class="section" id="o-nas" style="background: var(--bg);">
+        <div class="section-header reveal">
+            <h2 class="section-title">O nas</h2>
+            <p class="section-subtitle">Poznaj naszą agencję i dowiedz się, dlaczego klienci nam ufają</p>
+        </div>
+        <div class="about-grid">
+            <div class="about-image reveal">
+                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80" alt="Biuro agencji nieruchomości" loading="lazy">
+            </div>
+            <div class="about-content reveal">
+                <h3>Doświadczenie, które buduje zaufanie</h3>
+                <p>Małopolska Prestige Nieruchomości to agencja z wieloletnim doświadczeniem w branży obrotu nieruchomościami. Specjalizujemy się w sprzedaży i wynajmie mieszkań, domów oraz działek na terenie całej Małopolski.</p>
+                <p>Nasz zespół składa się z certyfikowanych pośredników i doradców, którzy doskonale znają lokalny rynek. Działamy w Krakowie, Tarnowie, Nowym Sączu, Oświęcimiu i okolicach.</p>
+                <div class="about-features">
+                    <div class="about-feature">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <span>15+ lat doświadczenia</span>
+                    </div>
+                    <div class="about-feature">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <span>2000+ transakcji</span>
+                    </div>
+                    <div class="about-feature">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <span>Certyfikowani agenci</span>
+                    </div>
+                    <div class="about-feature">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <span>Pełna obsługa prawna</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Oferty -->
+    <section class="section" id="oferty" style="background: #f0efed;">
+        <div class="section-header reveal">
+            <h2 class="section-title">Oferty nieruchomości</h2>
+            <p class="section-subtitle">Wyselekcjonowane propozycje z rynku pierwotnego i wtórnego</p>
+        </div>
+        <div class="properties-grid">
+            <!-- Property 1 -->
+            <article class="property-card reveal">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=80" alt="Mieszkanie w Krakowie" loading="lazy">
+                    <span class="property-badge">Sprzedaż</span>
+                </div>
+                <div class="property-content">
+                    <div class="property-location">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Kraków, Kazimierz
+                    </div>
+                    <h3 class="property-title">Nowoczesne mieszkanie z antresolą</h3>
+                    <div class="property-details">
+                        <div class="property-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                            68 m²
+                        </div>
+                        <div class="property-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                            3 pokoje
+                        </div>
+                    </div>
+                    <div class="property-price">895 000 zł</div>
+                    <button class="btn-property">Zobacz szczegóły</button>
+                </div>
+            </article>
+
+            <!-- Property 2 -->
+            <article class="property-card reveal">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80" alt="Dom w Małopolsce" loading="lazy">
+                    <span class="property-badge premium">Premium</span>
+                </div>
+                <div class="property-content">
+                    <div class="property-location">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Zabierzów, Małopolska
+                    </div>
+                    <h3 class="property-title">Willa z basenem i ogrodem</h3>
+                    <div class="property-details">
+                        <div class="property-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                            320 m²
+                        </div>
+                        <div class="property-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                            6 pokoi
+                        </div>
+                    </div>
+                    <div class="property-price">2 450 000 zł</div>
+                    <button class="btn-property">Zobacz szczegóły</button>
+                </div>
+            </article>
+
+            <!-- Property 3 -->
+            <article class="property-card reveal">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80" alt="Działka budowlana" loading="lazy">
+                    <span class="property-badge">Działka</span>
+                </div>
+                <div class="property-content">
+                    <div class="property-location">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Skawina, Małopolska
+                    </div>
+                    <h3 class="property-title">Działka budowlana z mediami</h3>
+                    <div class="property-details">
+                        <div class="property-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                            1200 m²
+                        </div>
+                        <div class="property-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                            Media
+                        </div>
+                    </div>
+                    <div class="property-price">385 000 zł</div>
+                    <button class="btn-property">Zobacz szczegóły</button>
+                </div>
+            </article>
+
+            <!-- Property 4 -->
+            <article class="property-card reveal">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&q=80" alt="Apartament premium" loading="lazy">
+                    <span class="property-badge premium">Premium</span>
+                </div>
+                <div class="property-content">
+                    <div class="property-location">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Kraków, Stare Miasto
+                    </div>
+                    <h3 class="property-title">Apartament w kamienicy</h3>
+                    <div class="property-details">
+                        <div class="property-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                            145 m²
+                        </div>
+                        <div class="property-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                            4 pokoje
+                        </div>
+                    </div>
+                    <div class="property-price">1 890 000 zł</div>
+                    <button class="btn-property">Zobacz szczegóły</button>
+                </div>
+            </article>
+
+            <!-- Property 5 -->
+            <article class="property-card reveal">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&q=80" alt="Mieszkanie na wynajem" loading="lazy">
+                    <span class="property-badge" style="background: #059669;">Wynajem</span>
+                </div>
+                <div class="property-content">
+                    <div class="property-location">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Kraków, Podgórze
+                    </div>
+                    <h3 class="property-title">Mieszkanie 2-pokojowe</h3>
+                    <div class="property-details">
+                        <div class="property-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                            42 m²
+                        </div>
+                        <div class="property-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                            2 pokoje
+                        </div>
+                    </div>
+                    <div class="property-price">3 200 zł <span>/ miesiąc</span></div>
+                    <button class="btn-property">Zobacz szczegóły</button>
+                </div>
+            </article>
+
+            <!-- Property 6 -->
+            <article class="property-card reveal">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=600&q=80" alt="Dom jednorodzinny" loading="lazy">
+                    <span class="property-badge">Sprzedaż</span>
+                </div>
+                <div class="property-content">
+                    <div class="property-location">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Tarnów, Małopolska
+                    </div>
+                    <h3 class="property-title">Dom jednorodzinny z garażem</h3>
+                    <div class="property-details">
+                        <div class="property-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                            180 m²
+                        </div>
+                        <div class="property-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                            5 pokoi
+                        </div>
+                    </div>
+                    <div class="property-price">780 000 zł</div>
+                    <button class="btn-property">Zobacz szczegóły</button>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Cennik -->
+    <section class="section" id="cennik" style="background: var(--bg);">
+        <div class="section-header reveal">
+            <h2 class="section-title">Cennik usług</h2>
+            <p class="section-subtitle">Transparentne zasady współpracy i konkurencyjne stawki</p>
+        </div>
+        <div class="pricing-container reveal">
+            <div class="pricing-table">
+                <div class="pricing-row header">
+                    <div>Usługa</div>
+                    <div class="price">Cena</div>
+                </div>
+                <div class="pricing-row">
+                    <div class="pricing-service">Pośrednictwo sprzedaży nieruchomości</div>
+                    <div class="price">2,5% - 3% wartości</div>
+                </div>
+                <div class="pricing-row">
+                    <div class="pricing-service">Pośrednictwo wynajmu</div>
+                    <div class="price">1 miesięczny czynsz</div>
+                </div>
+                <div class="pricing-row">
+                    <div class="pricing-service">Wycena nieruchomości</div>
+                    <div class="price">od 500 zł</div>
+                </div>
+                <div class="pricing-row">
+                    <div class="pricing-service">Sesja zdjęciowa nieruchomości</div>
+                    <div class="price">od 800 zł</div>
+                </div>
+                <div class="pricing-row">
+                    <div class="pricing-service">Doradztwo inwestycyjne</div>
+                    <div class="price">od 1000 zł</div>
+                </div>
+                <div class="pricing-row">
+                    <div class="pricing-service">Obsługa prawna transakcji</div>
+                    <div class="price">od 1500 zł</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Usługi -->
+    <section class="section" id="uslugi" style="background: #f0efed;">
+        <div class="section-header reveal">
+            <h2 class="section-title">Nasze usługi</h2>
+            <p class="section-subtitle">Kompleksowa obsługa na każdym etapie transakcji</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <div class="service-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                </div>
+                <h4>Sprzedaż nieruchomości</h4>
+                <p>Profesjonalna sprzedaż mieszkań, domów i działek. Kompleksowe przygotowanie oferty, marketing i obsługa prawna.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                </div>
+                <h4>Wynajem</h4>
+                <p>Szybkie i bezpieczne wynajmowanie nieruchomości. Weryfikacja najemców, przygotowanie umów i bieżąca obsługa.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                </div>
+                <h4>Wyceny</h4>
+                <p>Rzetelne wyceny nieruchomości sporządzane przez certyfikowanych rzeczoznawców. Operaty szacunkowe dla banków i sądów.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                </div>
+                <h4>Doradztwo</h4>
+                <p>Profesjonalne doradztwo inwestycyjne. Pomoc w podejmowaniu decyzji o zakupie, sprzedaży lub inwestowaniu w nieruchomości.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+                </div>
+                <h4>Marketing</h4>
+                <p>Profesjonalne sesje zdjęciowe, wirtualne spacery i kampanie reklamowe. Maksymalna widoczność Twojej oferty.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <h4>Obsługa formalna</h4>
+                <p>Pełna obsługa prawna transakcji. Przygotowanie umów, współpraca z notariuszami i instytucjami.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeria -->
+    <section class="section" id="galeria" style="background: var(--bg);">
+        <div class="section-header reveal">
+            <h2 class="section-title">Galeria</h2>
+            <p class="section-subtitle">Zobacz nasze wybrane nieruchomości</p>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item reveal" data-index="0">
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="Willa z basenem" loading="lazy">
+                <div class="gallery-overlay">
+                    <span>Willa premium - Zabierzów</span>
+                </div>
+            </div>
+            <div class="gallery-item reveal" data-index="1">
+                <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80" alt="Nowoczesny apartament" loading="lazy">
+                <div class="gallery-overlay">
+                    <span>Apartament - Kraków</span>
+                </div>
+            </div>
+            <div class="gallery-item reveal" data-index="2">
+                <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&q=80" alt="Dom z ogrodem" loading="lazy">
+                <div class="gallery-overlay">
+                    <span>Dom jednorodzinny - Tarnów</span>
+                </div>
+            </div>
+            <div class="gallery-item reveal" data-index="3">
+                <img src="https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=600&q=80" alt="Salon apartamentu" loading="lazy">
+                <div class="gallery-overlay">
+                    <span>Salon - Kazimierz</span>
+                </div>
+            </div>
+            <div class="gallery-item reveal" data-index="4">
+                <img src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&q=80" alt="Kuchnia" loading="lazy">
+                <div class="gallery-overlay">
+                    <span>Kuchnia - Podgórze</span>
+                </div>
+            </div>
+            <div class="gallery-item reveal" data-index="5">
+                <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=600&q=80" alt="Taras" loading="lazy">
+                <div class="gallery-overlay">
+                    <span>Taras z widokiem - Wieliczka</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-label="Galeria zdjęć">
+        <div class="lightbox-content">
+            <button class="lightbox-close" id="lightboxClose" aria-label="Zamknij">&times;</button>
+            <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Poprzednie zdjęcie">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <img src="" alt="Zdjęcie galerii" id="lightboxImage">
+            <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Następne zdjęcie">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Opinie -->
+    <section class="section" id="opinie" style="background: #f0efed;">
+        <div class="section-header reveal">
+            <h2 class="section-title">Opinie klientów</h2>
+            <p class="section-subtitle">Zobacz, co mówią o nas zadowoleni klienci</p>
+        </div>
+        <div class="testimonials-slider reveal">
+            <div class="testimonials-track" id="testimonialsTrack">
+                <div class="testimonial-slide">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">Profesjonalna obsługa na najwyższym poziomie. Pan Marek pomógł mi sprzedać mieszkanie w ciągu 3 tygodni. Cena była wyższa niż oczekiwałem. Gorąco polecam!</p>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Jan Kowalski" class="testimonial-avatar">
+                            <div class="testimonial-info">
+                                <h5>Jan Kowalski</h5>
+                                <span>Kraków</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-slide">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">Dzięki agencji znalazłam wymarzony dom dla mojej rodziny. Pani Anna była niesamowicie pomocna i cierpliwa. Pokazała nam ponad 20 nieruchomości, aż znaleźliśmy tę idealną.</p>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Magdalena Nowak" class="testimonial-avatar">
+                            <div class="testimonial-info">
+                                <h5>Magdalena Nowak</h5>
+                                <span>Tarnów</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-slide">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">Jako inwestor zagraniczny potrzebowałem kogoś, kto zna lokalny rynek. Zespół Małopolska Prestige wykonał świetną robotę. Pełna obsługa w języku angielskim.</p>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80" alt="Thomas Mueller" class="testimonial-avatar">
+                            <div class="testimonial-info">
+                                <h5>Thomas Mueller</h5>
+                                <span>Niemcy</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-slide">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">Szybka sprzedaż działki budowlanej w atrakcyjnej cenie. Wszystkie formalności załatwione profesjonalnie. Polecam każdemu, kto szuka rzetelnego pośrednika.</p>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80" alt="Piotr Wiśniewski" class="testimonial-avatar">
+                            <div class="testimonial-info">
+                                <h5>Piotr Wiśniewski</h5>
+                                <span>Skawina</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonials-dots" id="testimonialsDots"></div>
+        </div>
+    </section>
+
+    <!-- Zespół -->
+    <section class="section" id="zespol" style="background: var(--bg);">
+        <div class="section-header reveal">
+            <h2 class="section-title">Nasz zespół</h2>
+            <p class="section-subtitle">Poznaj ekspertów, którzy pomogą Ci w transakcji</p>
+        </div>
+        <div class="team-grid">
+            <div class="team-card reveal">
+                <div class="team-image">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80" alt="Marek Kowalczyk" loading="lazy">
+                </div>
+                <div class="team-content">
+                    <h4>Marek Kowalczyk</h4>
+                    <p class="team-role">Główny Pośrednik</p>
+                    <p>15 lat doświadczenia. Specjalizuje się w nieruchomościach premium i transakcjach inwestycyjnych.</p>
+                </div>
+            </div>
+            <div class="team-card reveal">
+                <div class="team-image">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80" alt="Anna Nowicka" loading="lazy">
+                </div>
+                <div class="team-content">
+                    <h4>Anna Nowicka</h4>
+                    <p class="team-role">Senior Agent</p>
+                    <p>Ekspert rynku krakowskiego. Pomogła ponad 200 rodzinom znaleźć wymarzone mieszkanie.</p>
+                </div>
+            </div>
+            <div class="team-card reveal">
+                <div class="team-image">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80" alt="Tomasz Zieliński" loading="lazy">
+                </div>
+                <div class="team-content">
+                    <h4>Tomasz Zieliński</h4>
+                    <p class="team-role">Specjalista ds. Działek</p>
+                    <p>Zna każdy atrakcyjny teren w Małopolsce. Doradza inwestorom w zakupie gruntów budowlanych.</p>
+                </div>
+            </div>
+            <div class="team-card reveal">
+                <div class="team-image">
+                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80" alt="Katarzyna Wójcik" loading="lazy">
+                </div>
+                <div class="team-content">
+                    <h4>Katarzyna Wójcik</h4>
+                    <p class="team-role">Specjalista ds. Wynajmu</p>
+                    <p>Zarządza portfelem 150+ nieruchomości wynajmowanych. Specjalistka rynku mieszkaniowego.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontakt -->
+    <section class="section" id="kontakt" style="background: #f0efed;">
+        <div class="section-header reveal">
+            <h2 class="section-title">Kontakt</h2>
+            <p class="section-subtitle">Skontaktuj się z nami - odpowiemy na wszystkie pytania</p>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-info-card reveal">
+                <h3 style="font-size: 1.5rem; margin-bottom: 2rem; color: var(--primary);">Informacje kontaktowe</h3>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <div>
+                        <h5>Adres</h5>
+                        <p>ul. Floriańska 15, 31-021 Kraków</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    </div>
+                    <div>
+                        <h5>Telefon</h5>
+                        <p>+48 12 345 67 89</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    </div>
+                    <div>
+                        <h5>Email</h5>
+                        <p>kontakt@mpn-prestige.pl</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div>
+                        <h5>Godziny pracy</h5>
+                        <p>Pon-Pt: 9:00 - 18:00, Sob: 10:00 - 14:00</p>
+                    </div>
+                </div>
+                <div class="social-links">
+                    <a href="#" class="social-link" aria-label="Facebook">
+                        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Instagram">
+                        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                    <a href="#" class="social-link" aria-label="LinkedIn">
+                        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </a>
+                    <a href="#" class="social-link" aria-label="YouTube">
+                        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    </a>
+                </div>
+            </div>
+            <div class="contact-form-card reveal">
+                <h3 style="font-size: 1.5rem; margin-bottom: 2rem; color: var(--primary);">Wyślij wiadomość</h3>
+                <form id="contactForm" novalidate>
+                    <div class="form-group">
+                        <label for="name">Imię i nazwisko</label>
+                        <input type="text" id="name" name="name" placeholder="Jan Kowalski" required>
+                        <p class="form-error" id="nameError">Proszę podać imię i nazwisko</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Adres email</label>
+                        <input type="email" id="email" name="email" placeholder="jan@example.com" required>
+                        <p class="form-error" id="emailError">Proszę podać prawidłowy adres email</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Telefon</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+48 123 456 789">
+                        <p class="form-error" id="phoneError">Proszę podać numer telefonu</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Wiadomość</label>
+                        <textarea id="message" name="message" placeholder="Opisz, czego szukasz lub w czym możemy pomóc..." required></textarea>
+                        <p class="form-error" id="messageError">Proszę wpisać wiadomość</p>
+                    </div>
+                    <button type="submit" class="btn-submit">Wyślij wiadomość</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Map -->
+        <div class="map-container reveal">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2560.1234!2d19.9370!3d50.0647!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47165b1d9b1e1e1e%3A0x1e1e1e1e1e1e1e1e!2sFloria%C5%84ska%2C%20Krak%C3%B3w!5e0!3m2!1spl!2spl!4v1699999999999!5m2!1spl!2spl" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Lokalizacja biura"></iframe>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3 style="font-family: 'Playfair Display', serif;">MP<span style="color: var(--accent);">Nieruchomości</span></h3>
+                <p>Małopolska Prestige Nieruchomości to agencja z wieloletnim doświadczeniem. Pomagamy klientom w sprzedaży, zakupie i wynajmie nieruchomości na terenie całej Małopolski.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Nawigacja</h4>
+                <ul>
+                    <li><a href="#o-nas">O nas</a></li>
+                    <li><a href="#oferty">Oferty</a></li>
+                    <li><a href="#cennik">Cennik</a></li>
+                    <li><a href="#uslugi">Usługi</a></li>
+                    <li><a href="#kontakt">Kontakt</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Usługi</h4>
+                <ul>
+                    <li><a href="#">Sprzedaż nieruchomości</a></li>
+                    <li><a href="#">Wynajem</a></li>
+                    <li><a href="#">Wyceny</a></li>
+                    <li><a href="#">Doradztwo</a></li>
+                    <li><a href="#">Marketing</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Kontakt</h4>
+                <ul>
+                    <li><a href="tel:+48123456789">+48 12 345 67 89</a></li>
+                    <li><a href="mailto:kontakt@mpn-prestige.pl">kontakt@mpn-prestige.pl</a></li>
+                    <li><a href="#">ul. Floriańska 15, Kraków</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-demo-notice">
+            <p>TO JEST PRZYKŁADOWA STRONA DEMONSTRACYJNA</p>
+            <p style="color: #fff; font-weight: 400; font-size: 0.9rem; margin-top: 0.5rem;">
+                Aby zakupić taką lub podobną stronę, wejdź na 
+                <a href="https://xeoservices.pl" target="_blank" rel="noopener noreferrer">xeoservices.pl</a>
+            </p>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 Małopolska Prestige Nieruchomości. Wszystkie prawa zastrzeżone. Strona demonstracyjna.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize all variables at the beginning
+        const navbar = document.querySelector('.navbar');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxClose = document.getElementById('lightboxClose');
+        const lightboxPrev = document.getElementById('lightboxPrev');
+        const lightboxNext = document.getElementById('lightboxNext');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const testimonialsTrack = document.getElementById('testimonialsTrack');
+        const testimonialsDots = document.getElementById('testimonialsDots');
+        const contactForm = document.getElementById('contactForm');
+        
+        let currentSlide = 0;
+        let currentLightboxIndex = 0;
+        const totalSlides = 4;
+        let autoSlideInterval = null;
+
+        // Gallery images array
+        const galleryImages = [
+            'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80',
+            'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80',
+            'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80',
+            'https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=1200&q=80',
+            'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80',
+            'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80'
+        ];
+
+        // Navbar scroll effect
+        function handleScroll() {
+            // Check if mobile menu is open, if so don't change navbar bg on scroll (it's already full bg)
+            if (navLinks.classList.contains('active')) {
+                return;
+            }
+            
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll);
+
+        // Mobile menu toggle
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(function(link) {
+            link.addEventListener('click', function() {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // Calculate offset based on navbar height + top promo bar height
+                    const navbarHeight = navbar.offsetHeight;
+                    const promoBarHeight = document.querySelector('.top-promo-bar').offsetHeight;
+                    const offsetTop = targetElement.offsetTop - navbarHeight - promoBarHeight - 20;
+                    
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Reveal animations on scroll
+        const revealElements = document.querySelectorAll('.reveal');
+
+        function checkReveal() {
+            const windowHeight = window.innerHeight;
+            revealElements.forEach(function(element) {
+                const elementTop = element.getBoundingClientRect().top;
+                const revealPoint = 150;
+                if (elementTop < windowHeight - revealPoint) {
+                    element.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', checkReveal);
+        window.addEventListener('load', checkReveal);
+
+        // Lightbox functionality
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            lightboxImage.src = galleryImages[index];
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function showPrevImage() {
+            currentLightboxIndex = (currentLightboxIndex - 1 + galleryImages.length) % galleryImages.length;
+            lightboxImage.src = galleryImages[currentLightboxIndex];
+        }
+
+        function showNextImage() {
+            currentLightboxIndex = (currentLightboxIndex + 1) % galleryImages.length;
+            lightboxImage.src = galleryImages[currentLightboxIndex];
+        }
+
+        galleryItems.forEach(function(item, index) {
+            item.addEventListener('click', function() {
+                openLightbox(index);
+            });
+        });
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightboxPrev.addEventListener('click', showPrevImage);
+        lightboxNext.addEventListener('click', showNextImage);
+
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Keyboard navigation for lightbox
+        document.addEventListener('keydown', function(e) {
+            if (!lightbox.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') showPrevImage();
+            if (e.key === 'ArrowRight') showNextImage();
+        });
+
+        // Testimonials slider
+        // Create dots
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('button');
+            dot.classList.add('testimonial-dot');
+            if (i === 0) dot.classList.add('active');
+            dot.setAttribute('aria-label', 'Opinia ' + (i + 1));
+            dot.addEventListener('click', function() {
+                goToSlide(i);
+            });
+            testimonialsDots.appendChild(dot);
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            testimonialsTrack.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+            updateDots();
+            resetAutoSlide();
+        }
+
+        function updateDots() {
+            const dots = testimonialsDots.querySelectorAll('.testimonial-dot');
+            dots.forEach(function(dot, index) {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            goToSlide(currentSlide);
+        }
+
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function resetAutoSlide() {
+            clearInterval(autoSlideInterval);
+            startAutoSlide();
+        }
+
+        startAutoSlide();
+
+        // Form validation
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let isValid = true;
+
+            // Name validation
+            const nameInput = document.getElementById('name');
+            const nameError = document.getElementById('nameError');
+            if (nameInput.value.trim() === '') {
+                nameInput.classList.add('error');
+                nameError.classList.add('show');
+                isValid = false;
+            } else {
+                nameInput.classList.remove('error');
+                nameError.classList.remove('show');
+            }
+
+            // Email validation
+            const emailInput = document.getElementById('email');
+            const emailError = document.getElementById('emailError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value)) {
+                emailInput.classList.add('error');
+                emailError.classList.add('show');
+                isValid = false;
+            } else {
+                emailInput.classList.remove('error');
+                emailError.classList.remove('show');
+            }
+
+            // Phone validation (optional but if filled, must be valid)
+            const phoneInput = document.getElementById('phone');
+            const phoneError = document.getElementById('phoneError');
+            const phoneValue = phoneInput.value.trim();
+            if (phoneValue !== '') {
+                const phoneRegex = /^[\d\s\+\-\(\)]{9,}$/;
+                if (!phoneRegex.test(phoneValue)) {
+                    phoneInput.classList.add('error');
+                    phoneError.classList.add('show');
+                    isValid = false;
+                } else {
+                    phoneInput.classList.remove('error');
+                    phoneError.classList.remove('show');
+                }
+            }
+
+            // Message validation
+            const messageInput = document.getElementById('message');
+            const messageError = document.getElementById('messageError');
+            if (messageInput.value.trim() === '') {
+                messageInput.classList.add('error');
+                messageError.classList.add('show');
+                isValid = false;
+            } else {
+                messageInput.classList.remove('error');
+                messageError.classList.remove('show');
+            }
+
+            if (isValid) {
+                // Show success message
+                const submitBtn = contactForm.querySelector('.btn-submit');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Wiadomość wysłana!';
+                submitBtn.style.background = 'var(--success)';
+                
+                setTimeout(function() {
+                    submitBtn.textContent = originalText;
+                    submitBtn.style.background = '';
+                    contactForm.reset();
+                }, 3000);
+            }
+        });
+
+        // Remove error state on input
+        document.querySelectorAll('.form-group input, .form-group textarea').forEach(function(input) {
+            input.addEventListener('input', function() {
+                this.classList.remove('error');
+                const errorElement = this.parentElement.querySelector('.form-error');
+                if (errorElement) {
+                    errorElement.classList.remove('show');
+                }
+            });
+        });
+
+        // Prefers reduced motion
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (prefersReducedMotion.matches) {
+            clearInterval(autoSlideInterval);
+        }
+    </script>
+</body>
+</html>
